@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JButton;
 
@@ -19,6 +20,8 @@ import javax.swing.JButton;
 public class VentanaBuscaminas extends javax.swing.JFrame {
     int filas = 15;
     int columnas = 20;
+    
+     String numero;
     Boton [][] arrayBotones = new Boton [filas][columnas];
     /**
      * Creates new form VentanaBuscaminas
@@ -26,36 +29,104 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
     public VentanaBuscaminas() {
         initComponents();
         setSize(800, 600);
+        
+        
         setLocationRelativeTo(null);
         getContentPane().setLayout(new GridLayout(filas, columnas));
         for (int i = 0; i<filas; i++){
             for(int j = 0; j<columnas; j++){
                 Boton boton = new Boton(i,j);
+                 boton.setBorder(null);
                 getContentPane().add(boton);
                 arrayBotones[i][j] = boton;
+                
+                
+              
+                
+                
+                
+           
+              
                 boton.addMouseListener(new MouseAdapter(){
                     @Override
                     public void mousePressed(MouseEvent evt){
                         botonPulsado(evt);
+                        
+                        
+                          
                     }
                     
                 });
                       
                 
             }
-           
+          
         }
-         ponMinas(30);
+         
+        
+          ponMinas(30);
          cuentaMinas();
         
+          
+        
+          
+         
+         
+         
+          
+        
+        
     }
-    public void botonPulsado(MouseEvent e){
+        private void botonPulsado(MouseEvent e){
         Boton miBoton = (Boton) e.getComponent();
-        if(e.getButton() == MouseEvent.BUTTON3){
+        if (e.getButton() == MouseEvent.BUTTON3){
             miBoton.setText("?");
+        }
+                else{
+           //Si es una bomba --> Explota y se acaba el juego.
+            
+            //Si no es una bomba
+            //Si tiene minas alrededor mostramos cuantas
+            
+            if(miBoton.getNumeroMinasAlrededor() == 0){
+                ArrayList<Boton> listaDeCasillasAMirar = new ArrayList();
+                listaDeCasillasAMirar.add(miBoton);
+                
+                while(listaDeCasillasAMirar.size() > 0){
+                    Boton b = listaDeCasillasAMirar.get(0);
+                    for(int k = -1; k<2; k++){
+                        for(int m = -1; m<2; m++){
+                            if((b.getI() + k >= 0)&&(b.getJ() + m >= 0)&&(b.getI() + k < filas) && (b.getJ() + m < columnas)){
+                                if(arrayBotones[b.getI() + k][b.getJ() + m].isEnabled()){
+                                    if(arrayBotones[b.getI() + k][b.getJ() + m].getNumeroMinasAlrededor() == 0){
+                                        arrayBotones[b.getI() + k][b.getJ() + m].setEnabled(false);
+                                        listaDeCasillasAMirar.add(arrayBotones[b.getI() + k][b.getJ() + m]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    listaDeCasillasAMirar.remove(b);
+                } 
+            }  
+             if(arrayBotones[miBoton.getI()][miBoton.getJ()].getNumeroMinasAlrededor() > 0){
+                                        
+                                         numero = String.valueOf(arrayBotones[miBoton.getI()][miBoton.getJ()].getNumeroMinasAlrededor());
+                                     
+                                    }
+          
+        
+         miBoton.setEnabled(false);
+         miBoton.setText(numero);
+    
         }
     }
     
+//   
+    
+
+       
+       
     private void ponMinas(int numeroMinas){
         Random r = new Random();
         for(int i = 0; i<numeroMinas; i++){
@@ -66,13 +137,16 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
             //buscar otra
             arrayBotones[f][c].setMina(1);
             arrayBotones[f][c].setText("m");
+             
             
             
         }
     }
+
     
     //cuentaMinas es un método que para cada botón calcula el número de minas
     //que tiene alrededor
+    
     
     private void cuentaMinas(){
         //Todo falta por hacer que calcule las minas en el borde
@@ -99,14 +173,15 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
                 arrayBotones[i][j].setNumeroMinasAlrededor(minas);
                 
                 //TODO comentar la siguiente parte para que no aperezca los números al iniciar la partida 
-                if(arrayBotones[i][j].getMina() == 0){
-                    arrayBotones[i][j].setText(String.valueOf(minas));
-                    
-                }
+//                if(arrayBotones[i][j].getMina() == 0){
+//                    arrayBotones[i][j].setText(String.valueOf(minas));
+//                    
+//                }
                 minas = 0;
             }
         }
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
