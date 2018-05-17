@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -88,7 +90,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
             //Si no es una bomba
             //Si tiene minas alrededor mostramos cuantas
             
-            if(miBoton.getNumeroMinasAlrededor() == 0){
+            
                 ArrayList<Boton> listaDeCasillasAMirar = new ArrayList();
                 listaDeCasillasAMirar.add(miBoton);
                 
@@ -100,6 +102,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
                                 if(arrayBotones[b.getI() + k][b.getJ() + m].isEnabled()){
                                     if(arrayBotones[b.getI() + k][b.getJ() + m].getNumeroMinasAlrededor() == 0){
                                         arrayBotones[b.getI() + k][b.getJ() + m].setEnabled(false);
+                                        
                                         listaDeCasillasAMirar.add(arrayBotones[b.getI() + k][b.getJ() + m]);
                                     }
                                 }
@@ -108,16 +111,24 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
                     }
                     listaDeCasillasAMirar.remove(b);
                 } 
-            }  
+              
              if(arrayBotones[miBoton.getI()][miBoton.getJ()].getNumeroMinasAlrededor() > 0){
                                         
-                                         numero = String.valueOf(arrayBotones[miBoton.getI()][miBoton.getJ()].getNumeroMinasAlrededor());
-                                     
+              numero = String.valueOf(arrayBotones[miBoton.getI()][miBoton.getJ()].getNumeroMinasAlrededor());
+               miBoton.setText(numero);
                                     }
+             if(arrayBotones[miBoton.getI()][miBoton.getJ()].getMina() == 1){
+                        miBoton.setText("m");
+                        miBoton.setEnabled(false);
+                        
+                        
+                        
+                        JOptionPane.showMessageDialog(null, "has perdido");
+                        
+               
+                  }
           
-        
-         miBoton.setEnabled(false);
-         miBoton.setText(numero);
+                 
     
         }
     }
@@ -136,7 +147,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
             //seleccionada ya hay una mina, porque en ese caso tiene que
             //buscar otra
             arrayBotones[f][c].setMina(1);
-            arrayBotones[f][c].setText("m");
+//            arrayBotones[f][c].setText("m");
              
             
             
@@ -153,35 +164,24 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
         int minas = 0;
         for(int i = 0; i<filas; i++){
             for(int j = 0; j<columnas; j++){
-                if((i>0) && (j>0) && (i <filas-1) && (j<columnas-1)){
-                    minas += arrayBotones[i-1][j-1].getMina(); //la mina de arriba a la izquierda 
-                    minas += arrayBotones[i][j-1].getMina(); //la mina de la izquieda
-                    minas += arrayBotones[i+1][j-1].getMina(); //la mina de la abajo izquierda
-                    
-                    minas += arrayBotones[i-1][j].getMina(); //la mina de encima
-                    minas += arrayBotones[i+1][j].getMina(); //la mina de abajo
-                     
-                    minas += arrayBotones[i-1][j+1].getMina(); //la mina de arriba a la derecha
-                    minas += arrayBotones[i][j+1].getMina(); //la mina de la derecha 
-                    minas += arrayBotones[i+1][j+1].getMina(); //la mina de la abajo a la izquierda
-                        
-                        
-                    
-                        
-                    
+         for (int k = -1; k < 2; k++) {
+                    for (int m = -1; m < 2; m++) {
+                        if ((i + k >= 0) && (j + m >= 0) && (i + k < filas) && (j + m < columnas)) {
+                            minas = minas + arrayBotones[i + k][j + m].mina;
+                        }
+                    }
                 }
-                arrayBotones[i][j].setNumeroMinasAlrededor(minas);
-                
-                //TODO comentar la siguiente parte para que no aperezca los números al iniciar la partida 
-//                if(arrayBotones[i][j].getMina() == 0){
-//                    arrayBotones[i][j].setText(String.valueOf(minas));
-//                    
-//                }
+                arrayBotones[i][j].numeroMinasAlrededor = minas;
                 minas = 0;
+//                
             }
         }
     }
 
+                        
+                    
+                        
+   
 
     /**
      * This method is called from within the constructor to initialize the form.

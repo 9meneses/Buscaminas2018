@@ -13,7 +13,7 @@ import javax.swing.JButton;
  */
 public class Boton extends JButton {
     
-    private int mina = 0;
+    int mina = 0;
 
     public int getI() {
         return i;
@@ -40,7 +40,7 @@ public class Boton extends JButton {
     }
     private int i = 0;
     private int j = 0;
-    private int numeroMinasAlrededor = 0;
+    int numeroMinasAlrededor = 0;
     
     public Boton (int _i, int _j){
         i = _i;
