@@ -91,26 +91,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
             //Si tiene minas alrededor mostramos cuantas
             
             
-                ArrayList<Boton> listaDeCasillasAMirar = new ArrayList();
-                listaDeCasillasAMirar.add(miBoton);
-                
-                while(listaDeCasillasAMirar.size() > 0){
-                    Boton b = listaDeCasillasAMirar.get(0);
-                    for(int k = -1; k<2; k++){
-                        for(int m = -1; m<2; m++){
-                            if((b.getI() + k >= 0)&&(b.getJ() + m >= 0)&&(b.getI() + k < filas) && (b.getJ() + m < columnas)){
-                                if(arrayBotones[b.getI() + k][b.getJ() + m].isEnabled()){
-                                    if(arrayBotones[b.getI() + k][b.getJ() + m].getNumeroMinasAlrededor() == 0){
-                                        arrayBotones[b.getI() + k][b.getJ() + m].setEnabled(false);
-                                        
-                                        listaDeCasillasAMirar.add(arrayBotones[b.getI() + k][b.getJ() + m]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    listaDeCasillasAMirar.remove(b);
-                } 
+             recursiva(miBoton);
               
              if(arrayBotones[miBoton.getI()][miBoton.getJ()].getNumeroMinasAlrededor() > 0){
                                         
@@ -131,6 +112,26 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
                  
     
         }
+    }
+            public void recursiva (Boton boton){ 
+                if (boton.getNumeroMinasAlrededor() == 0) {
+            boton.setEnabled(false);
+            for (int k = -1; k < 2; k++) {
+                for (int m = -1; m < 2; m++) {
+                    if ((boton.getI() + k >= 0) && (boton.getJ() + m >= 0) && (boton.getI() + k < filas) && (boton.getJ() + m < columnas)) {
+                        if (arrayBotones[boton.getI() + k][boton.getJ() + m].isEnabled()) {
+                            if (arrayBotones[boton.getI() + k][boton.getJ() + m].getNumeroMinasAlrededor() == 0) {
+                                arrayBotones[boton.getI() + k][boton.getJ() + m].setEnabled(false);
+                                recursiva(arrayBotones[boton.getI() + k][boton.getJ() + m]);
+                            } 
+                          
+                        }
+                    }
+                }
+            }
+        }
+
+    
     }
     
 //   
